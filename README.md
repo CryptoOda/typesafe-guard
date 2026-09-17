@@ -59,7 +59,7 @@ when `decide(...)` returns `"block"`, otherwise attaches the scan result to
 
 ## Benchmark
 
-`benchmarks/run_benchmark.py` runs 47 labeled samples (injection, jailbreak,
+`benchmarks/run_benchmark.py` runs 50 labeled samples (injection, jailbreak,
 PII, secrets, and 19 benign samples including hard near-misses like "please
 ignore the typo in my previous message") through `Guard.scan` and reports
 recall against ground truth plus precision against benign text specifically.
@@ -89,10 +89,15 @@ real property of the phenomenon, not a bug. Callers who need mutually
 exclusive categories should treat "high on both" as its own signal
 ("identity override attempt") rather than picking one label.
 
-Sample size is still modest (47 items, hand-written, single run) — a real
+Sample size is still modest (50 items, hand-written, single run) — a real
 release needs a larger, independently-sourced adversarial corpus before
 these numbers are a production claim rather than a benchmarks note. Full
 methodology and raw numbers: `benchmarks/RESULTS.md`.
+
+**Throughput** (wall-clock, live API, includes network round-trip): median
+0.326s latency per batched request (all 4 checks at once), ~251 output
+tokens/sec median, ~82 output tokens per request. Full numbers and the
+wall-clock-vs-decode-speed caveat: `benchmarks/RESULTS.md`.
 
 ```bash
 python3 benchmarks/run_benchmark.py
