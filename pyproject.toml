@@ -5,6 +5,21 @@ description = "LLM-agnostic guardrails (prompt injection, jailbreak, PII/secret 
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
+authors = [
+    { name = "crypto-oda", email = "crypto.oda@gmail.com" },
+]
+keywords = ["llm", "guardrails", "prompt-injection", "jailbreak", "security", "typesafe"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
 dependencies = [
     "typesafe-sdk>=0.6.0",
 ]
@@ -12,6 +27,14 @@ dependencies = [
 [project.optional-dependencies]
 test = ["pytest"]
 
+[project.urls]
+Homepage = "https://github.com/crypto-oda/typesafe-guard"
+Repository = "https://github.com/crypto-oda/typesafe-guard"
+Issues = "https://github.com/crypto-oda/typesafe-guard/issues"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

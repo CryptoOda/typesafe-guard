@@ -1,5 +1,8 @@
 # typesafe-guard
 
+[![CI](https://github.com/crypto-oda/typesafe-guard/actions/workflows/ci.yml/badge.svg)](https://github.com/crypto-oda/typesafe-guard/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 LLM-agnostic guardrails — prompt injection, jailbreak attempts, PII exposure,
 and secret/credential leaks — using [TypeSafe](https://typesafe.ai)'s Jev
 model for fast, cheap, calibrated typed judgments instead of a full LLM call
@@ -21,12 +24,19 @@ supplies the typed judgment.
 
 ## Install
 
+Not yet on PyPI — install from a clone:
+
 ```bash
+git clone https://github.com/crypto-oda/typesafe-guard.git
+cd typesafe-guard
 uv pip install -e .
 ```
 
+(`pip install -e .` inside a venv works too if you don't use `uv`.)
+
 Requires `TYPESAFE_API_KEY` in the environment (get one at
-https://console.typesafe.ai/settings/keys).
+https://console.typesafe.ai/settings/keys). Copy `.env.example` to `.env`
+and fill it in, or export it directly.
 
 ## Usage
 
@@ -113,6 +123,13 @@ python3 benchmarks/run_benchmark.py
 - This library only classifies; it does not redact, rewrite, or store
   anything. Blocking/warning/logging behavior is the caller's responsibility.
 
+## Contributing
+
+Bug reports and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for dev
+setup, running tests (no API key needed, `TypeSafeClient` is mocked) and
+running the benchmark. Found a security issue (e.g. a bypass)? See
+[SECURITY.md](SECURITY.md) instead of opening a public issue.
+
 ## License
 
-MIT
+[MIT](LICENSE)
