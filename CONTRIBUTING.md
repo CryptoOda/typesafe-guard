@@ -34,6 +34,19 @@ to `DEFAULT_CHECKS` in `typesafe_guard/core.py` — several rewrites were tried
 and rejected for lowering recall or precision; changes there should come with
 a benchmark re-run showing the effect.
 
+## Running the cost benchmark
+
+```bash
+cp .env.example .env   # then fill in OPENROUTER_API_KEY
+python3 benchmarks/run_cost_benchmark.py
+```
+
+Compares Jev's cost/latency against a few general-purpose LLMs as judge, via
+OpenRouter (get a key at https://openrouter.ai/keys). Costs real money on
+your OpenRouter account (well under $0.50 for a full run). If you change the
+model list in `benchmarks/run_cost_benchmark.py`, update the tables in
+`README.md` and `benchmarks/RESULTS.md` to match.
+
 ## Pull requests
 
 - Keep changes focused; unrelated cleanup belongs in its own PR.

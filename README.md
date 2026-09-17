@@ -113,6 +113,33 @@ wall-clock-vs-decode-speed caveat: `benchmarks/RESULTS.md`.
 python3 benchmarks/run_benchmark.py
 ```
 
+### Cost vs. general-purpose LLM-as-judge
+
+`benchmarks/run_cost_benchmark.py` runs the same 50 samples through three
+general-purpose models via [OpenRouter](https://openrouter.ai) — same
+batched-4-checks-per-request shape, same check definitions, so it's a direct
+stand-in for "what if I just used a general LLM as judge instead of Jev."
+Measures cost and latency only, not accuracy.
+
+| model                          | cost/1k requests | median latency |
+|----------------------------------|--------------------|------------------|
+| Jev (`jev-latest`, via TypeSafe)  | *n/a — pricing not published* | 0.326s |
+| `openai/gpt-4o-mini`              | $0.073             | 2.02s            |
+| `mistralai/mistral-small-2603`    | $0.058             | 3.47s            |
+| `anthropic/claude-haiku-4.5`      | $0.586             | 1.38s            |
+
+Cost varies ~10x between these three "cheap tier" models from different
+providers, and even the fastest of them is over 4x slower than Jev's median.
+Full numbers, token counts, and methodology: `benchmarks/RESULTS.md`.
+
+```bash
+python3 benchmarks/run_cost_benchmark.py
+```
+
+Requires `OPENROUTER_API_KEY` (get one at https://openrouter.ai/keys) —
+costs real money on your OpenRouter account each time it runs (well under
+$0.50 for the three models above).
+
 ## Design notes
 
 - Thresholds (`block_threshold=0.85`, `warn_threshold=0.5` in `decide()`) are
