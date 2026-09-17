@@ -123,13 +123,15 @@ Measures cost and latency only, not accuracy.
 
 | model                          | cost/1k requests | median latency |
 |----------------------------------|--------------------|------------------|
-| Jev (`jev-latest`, via TypeSafe)  | *n/a — pricing not published* | 0.326s |
-| `openai/gpt-4o-mini`              | $0.073             | 2.02s            |
-| `mistralai/mistral-small-2603`    | $0.058             | 3.47s            |
-| `anthropic/claude-haiku-4.5`      | $0.586             | 1.38s            |
+| Jev (`jev-latest`, via TypeSafe)  | **$0.0199**        | 0.326s           |
+| `mistralai/mistral-small-2603`    | $0.058 (2.9x Jev)  | 3.47s            |
+| `openai/gpt-4o-mini`              | $0.073 (3.7x Jev)  | 2.02s            |
+| `anthropic/claude-haiku-4.5`      | $0.586 (29.5x Jev) | 1.38s            |
 
-Cost varies ~10x between these three "cheap tier" models from different
-providers, and even the fastest of them is over 4x slower than Jev's median.
+Jev is the cheapest of the four here (input $0.042/1M tokens, output free —
+per TypeSafe's published pricing) as well as the fastest: 3-4x cheaper than
+gpt-4o-mini or mistral-small, and ~30x cheaper than claude-haiku-4.5, while
+also answering in under a quarter of the time of the fastest of the three.
 Full numbers, token counts, and methodology: `benchmarks/RESULTS.md`.
 
 ```bash

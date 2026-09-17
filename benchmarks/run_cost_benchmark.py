@@ -49,6 +49,17 @@ MODELS = [
     "mistralai/mistral-small-2603",
 ]
 
+# Jev reference numbers, for the summary table only (not fetched live: the
+# typesafe-sdk response has no `cost` field, and these are the already-
+# measured numbers from `benchmarks/RESULTS.md`'s recall/precision run).
+# Update these if you re-run that benchmark and get materially different
+# token counts, or if TypeSafe's published pricing changes.
+JEV_MEAN_INPUT_TOKENS = 473.24  # 23,662 / 50, from RESULTS.md
+JEV_MEAN_OUTPUT_TOKENS = 82.0  # 4,100 / 50, from RESULTS.md
+JEV_MEDIAN_LATENCY_SECONDS = 0.326  # from RESULTS.md
+JEV_PRICE_PER_INPUT_TOKEN = 0.042 / 1_000_000  # published TypeSafe pricing
+JEV_PRICE_PER_OUTPUT_TOKEN = 0.0  # output is free
+
 CHECK_NAMES = list(DEFAULT_CHECKS)
 
 SYSTEM_PROMPT = (
@@ -174,6 +185,17 @@ def print_summary(all_results: dict[str, list[dict]], *, num_samples: int) -> No
     print(f"\n{'=' * 70}\nCost summary ({num_samples} samples, 4 checks batched per request)\n{'=' * 70}")
     header = f"{'model':<28} {'in tok':>8} {'out tok':>8} {'$/req':>10} {'$/1k req':>10} {'p50 lat':>8} {'unparsed':>9}"
     print(header)
+
+    jev_cost_per_req = (
+        JEV_MEAN_INPUT_TOKENS * JEV_PRICE_PER_INPUT_TOKEN
+        + JEV_MEAN_OUTPUT_TOKENS * JEV_PRICE_PER_OUTPUT_TOKEN
+    )
+    print(
+        f"{'Jev (jev-latest, reference)':<28} {JEV_MEAN_INPUT_TOKENS:>8.0f} {JEV_MEAN_OUTPUT_TOKENS:>8.0f} "
+        f"{jev_cost_per_req:>10.6f} {jev_cost_per_req * 1000:>10.4f} "
+        f"{JEV_MEDIAN_LATENCY_SECONDS:>7.2f}s {'n/a':>9}"
+    )
+
     for model, records in all_results.items():
         if not records:
             print(f"{model:<28} no successful requests")
@@ -182,13 +204,15 @@ def print_summary(all_results: dict[str, list[dict]], *, num_samples: int) -> No
         total_in = sum(r["prompt_tokens"] or 0 for r in records)
         total_out = sum(r["completion_tokens"] or 0 for r in records)
         total_cost = sum(r["cost_usd"] or 0 for r in records)
+        cost_per_req = total_cost / n
         latencies = sorted(r["seconds"] for r in records)
         p50 = latencies[len(latencies) // 2]
         unparsed = sum(1 for r in records if not r["parsed_ok"])
+        ratio = cost_per_req / jev_cost_per_req if jev_cost_per_req else float("inf")
         print(
             f"{model:<28} {total_in / n:>8.0f} {total_out / n:>8.0f} "
-            f"{total_cost / n:>10.6f} {(total_cost / n) * 1000:>10.4f} "
-            f"{p50:>7.2f}s {unparsed:>9d}"
+            f"{cost_per_req:>10.6f} {cost_per_req * 1000:>10.4f} "
+            f"{p50:>7.2f}s {unparsed:>9d}  ({ratio:.1f}x Jev)"
         )
 
 
