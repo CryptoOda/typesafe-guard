@@ -1,0 +1,17 @@
+[project]
+name = "typesafe-guard"
+version = "0.1.0"
+description = "LLM-agnostic guardrails (prompt injection, jailbreak, PII/secret exposure) using TypeSafe's Jev model."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "typesafe-sdk>=0.6.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
